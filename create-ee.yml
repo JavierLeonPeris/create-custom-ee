@@ -15,10 +15,19 @@
       args:
         chdir: "{{ git_dest }}"
 
-    - name: Push the new execution environment to the registry
-      command: "podman push {{ registry }}/{{ image }}:{{ ci_version }}"
+    - name: Login to the registry
+      command: "podman login -u={{ username }} -p={{ password }} {{ registry }}"
       args:
         chdir: "{{ git_dest }}"
+
+    - name: Push the new execution environment to the registry
+      command: "podman push {{ registry }}/{{ image }}:{{ item }}"
+      args:
+        chdir: "{{ git_dest }}"
+      with_items:
+        - "{{ ci_version }}"
+        - "{{ current_date }}"
+        - "latest"
       register: push_result
     
     - name: Display push_result
