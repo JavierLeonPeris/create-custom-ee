@@ -14,3 +14,13 @@
       command: "ansible-builder build --verbosity 3 --prune-images --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_URL={{ automation_hub }} --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN={{ automation_hub_token }} --container-runtime docker -t {{ registry }}/{{ image }}:{{ ci_version }} -t {{ registry }}/{{ image }}:{{ current_date }} -t {{ registry }}/{{ image }}:latest"
       args:
         chdir: "{{ git_dest }}"
+
+    - name: Push the new execution environment to the registry
+      command: "podman push {{ registry }}/{{ image }}:{{ ci_version }}"
+      args:
+        chdir: "{{ git_dest }}"
+      register: push_result
+    
+    - name: Display push_result
+      debug:
+        var: push_result
