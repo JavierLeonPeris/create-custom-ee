@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: yes
+  vars:
+  tasks:
+    - name: Download repo from ssh://git@gitstash.aib.pri/midap/dbbe-a2.15-p3.9-rhel9.3.git
+      git:
+        #repo: 'ssh://git@gitstash.aib.pri/midap/dbbe-a2.15-p3.9-rhel9.3.git'
+        repo: 'https://github.com/JavierLeonPeris/create-custom-ee.git'
+        dest: "{{ git_dest }}"
+
+    - name: Use ansible-builder to create a new execution environment
+      #command: ansible-builder build --execution-environment ./execution-environment.yml 
+      command: "ansible-builder build --verbosity 3 --prune-images --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_URL={{ automation_hub }} --build-arg ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN={{ automation_hub_token }} --container-runtime docker -t {{ registry }}/{{ image }}:{{ ci_version }} -t {{ registry }}/{{ image }}:{{ current_date }} -t {{ registry }}/{{ image }}:latest"
+      args:
+        chdir: "{{ git_dest }}"
