@@ -10,5 +10,5 @@
       register: template_result
 
     - name: Display template result
-      debug:
-        var: template_result
+      shell:
+        cmd: cat execution-environment.yml
