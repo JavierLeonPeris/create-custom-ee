@@ -1,0 +1,14 @@
+---
+- hosts: all
+  gather_facts: yes
+  vars:
+  tasks:
+    - name: Generate execution environment file from template
+      template:
+        src: execution-environment.yml.j2
+        dest: "execution-environment.yml"
+      register: template_result
+
+    - name: Display template result
+      debug:
+        var: template_result
